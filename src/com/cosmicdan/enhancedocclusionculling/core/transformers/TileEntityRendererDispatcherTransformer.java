@@ -53,7 +53,7 @@ public class TileEntityRendererDispatcherTransformer implements IClassTransforme
                 InsnList toInject = new InsnList();
                 toInject.add(new VarInsnNode(Opcodes.ALOAD, 1)); // push first parameter (TileEntity p_147549_1_) onto stack
                 
-                toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/cosmicdan/entityrendertweaks/TileEntityRendererHook", "shouldRenderTileEntityAt", callbackDesc, false));
+                toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/cosmicdan/enhancedocclusionculling/renderhandlers/TileEntities", "shouldRender", callbackDesc, false));
                 toInject.add(new JumpInsnNode(Opcodes.IFNE, labelTrue)); // if result is true, go to labelTrue
                 toInject.add(new InsnNode(Opcodes.RETURN)); // not true, so return
                 toInject.add(labelTrue); // is true, so continue with the rest of method

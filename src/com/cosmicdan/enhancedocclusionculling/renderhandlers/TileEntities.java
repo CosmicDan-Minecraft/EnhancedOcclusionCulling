@@ -1,4 +1,4 @@
-package com.cosmicdan.enhancedocclusionculling;
+package com.cosmicdan.enhancedocclusionculling.renderhandlers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustrum;
@@ -6,9 +6,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 
-public class TileEntityRendererHook {
+public class TileEntities {
 
-    public static boolean shouldRenderTileEntityAt(TileEntity te) {
+    public static boolean shouldRender(TileEntity te) {
         // if the TE's co-ords are 0,0,0 then ALWAYS return true (cheap check for a non-worldspace TESR render)
         if ((te.xCoord == 0) && (te.yCoord == 0) && (te.zCoord == 0)) return true;
         
