@@ -1,0 +1,15 @@
+[{
+  "modid": "enhancedocclusionculling",
+  "name": "Enhanced Occlusion Culling",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${MCversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CosmicDan"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": [],
+  "useDependencyInformation": "false"
+}]
