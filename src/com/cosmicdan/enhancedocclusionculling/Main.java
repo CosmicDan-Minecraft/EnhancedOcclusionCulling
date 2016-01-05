@@ -2,14 +2,19 @@ package com.cosmicdan.enhancedocclusionculling;
 
 import java.util.Map;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.cosmicdan.enhancedocclusionculling.rendertrackers.TileEntityTracker;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @Mod(
@@ -27,9 +32,17 @@ public class Main {
     
     @Instance(MODNAME)
     public static Main INSTANCE;
+    public static RenderWorker RENDER_WORKER = new RenderWorker();
+    
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        TileEntityTracker.init();
+        MinecraftForge.EVENT_BUS.register(RENDER_WORKER);
+    }
     
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        
     }
     
 }

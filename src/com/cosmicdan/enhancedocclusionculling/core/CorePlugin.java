@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name(value = "Entity Render Tweaks Core")
 @IFMLLoadingPlugin.MCVersion(value = "1.7.10")
-@IFMLLoadingPlugin.TransformerExclusions(value = "com.cosmicdan.entityrenderertweaks.")
+@IFMLLoadingPlugin.TransformerExclusions(value = "com.cosmicdan.enhancedocclusionculling.")
 @IFMLLoadingPlugin.SortingIndex(value = 1001)
 
 public class CorePlugin implements IFMLLoadingPlugin {

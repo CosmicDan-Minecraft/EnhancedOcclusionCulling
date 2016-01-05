@@ -46,17 +46,17 @@ public class TileEntityRendererDispatcherTransformer implements IClassTransforme
             if ((m.name.equals(targetMethod) && m.desc.equals(targetDesc))) {
                 AbstractInsnNode currentNode = null;
                 AbstractInsnNode targetNode = null;
-
                 AbstractInsnNode ain = m.instructions.getFirst();
-                LabelNode labelTrue = new LabelNode();
-                //LabelNode labelFalse = new LabelNode();
                 InsnList toInject = new InsnList();
-                toInject.add(new VarInsnNode(Opcodes.ALOAD, 1)); // push first parameter (TileEntity p_147549_1_) onto stack
                 
-                toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/cosmicdan/enhancedocclusionculling/renderhandlers/TileEntities", "shouldRender", callbackDesc, false));
+                LabelNode labelTrue = new LabelNode();
+                
+                toInject.add(new VarInsnNode(Opcodes.ALOAD, 1)); // push first parameter (TileEntity p_147549_1_) onto stack
+                toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/cosmicdan/enhancedocclusionculling/rendertrackers/TileEntityTracker", "shouldRender", callbackDesc, false));
                 toInject.add(new JumpInsnNode(Opcodes.IFNE, labelTrue)); // if result is true, go to labelTrue
-                toInject.add(new InsnNode(Opcodes.RETURN)); // not true, so return
+                toInject.add(new InsnNode(Opcodes.RETURN)); // not true, so return (i.e. don't render)
                 toInject.add(labelTrue); // is true, so continue with the rest of method
+                
                 m.instructions.insertBefore(ain, toInject);
                 Main.LOGGER.info("[i] Patched net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher#renderTileEntityAt");
                 break;

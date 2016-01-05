@@ -113,7 +113,7 @@ artifacts {
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'com.cosmicdan.entityrendertweaks.core.CorePlugin',
+        attributes 'FMLCorePlugin': 'com.cosmicdan.enhancedocclusionculling.core.CorePlugin',
                    'FMLCorePluginContainsFMLMod': 'true'
     }
 }
