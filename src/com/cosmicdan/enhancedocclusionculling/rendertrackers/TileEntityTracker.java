@@ -1,6 +1,6 @@
 package com.cosmicdan.enhancedocclusionculling.rendertrackers;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.cosmicdan.enhancedocclusionculling.ModConfig;
 
@@ -13,10 +13,10 @@ import net.minecraft.util.Vec3;
 
 public class TileEntityTracker {
     
-    public static HashMap<String, TileEntityRecord> TRACKED_ITEMS;
+    public static ConcurrentHashMap<String, TileEntityRecord> TRACKED_ITEMS;
     
     public static void init() {
-        TRACKED_ITEMS = new HashMap<String, TileEntityRecord>(ModConfig.WORKER_INITIAL_SIZE, (float) ModConfig.WORKER_LOAD_FACTOR);
+        TRACKED_ITEMS = new ConcurrentHashMap<String, TileEntityRecord>(ModConfig.WORKER_INITIAL_SIZE, (float) ModConfig.WORKER_LOAD_FACTOR);
     }
 
     public static boolean shouldRender(TileEntity te) {

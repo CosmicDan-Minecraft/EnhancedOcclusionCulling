@@ -36,8 +36,10 @@ public class TileEntityRecord {
     }
     
     public void setShouldRender(boolean shouldRender) {
-        this.shouldRender = shouldRender;
-        this.age = 0;
+        if (shouldRender != this.shouldRender) {
+            this.shouldRender = shouldRender;
+            this.age = 0;
+        }
     }
     
     public boolean getShouldRender() {
