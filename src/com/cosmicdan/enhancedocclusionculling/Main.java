@@ -38,6 +38,7 @@ public class Main {
     public void preInit(FMLPreInitializationEvent event) {
         TileEntityTracker.init();
         MinecraftForge.EVENT_BUS.register(RENDER_WORKER);
+        MinecraftForge.EVENT_BUS.register(new DebugInfo());
     }
     
     @EventHandler
