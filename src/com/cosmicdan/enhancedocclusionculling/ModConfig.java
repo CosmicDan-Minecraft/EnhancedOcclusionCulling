@@ -7,10 +7,11 @@ import net.minecraftforge.common.config.Property;
 
 public class ModConfig {
 
-    public static int FRAMES_BEFORE_UPDATE = 1;
+    public static int FRAMES_BEFORE_UPDATE = 2;
     public static int FRAMES_BEFORE_PURGE = 100;
     public static int WORKER_INITIAL_SIZE = 100;
     public static double WORKER_LOAD_FACTOR = 0.5;
+    public static boolean OBJECTS_INITIALLY_HIDDEN = true;
     
     private static Configuration CONFIG;
     
@@ -21,8 +22,8 @@ public class ModConfig {
         FRAMES_BEFORE_UPDATE = loadInt("FRAMES_BEFORE_UPDATE",
                 "How many frames before each tracked object is checked for viewport occlusion, where 0 is every frame.\n" +
                 "Default: " + FRAMES_BEFORE_UPDATE + "\n" +
-                "The default is usually good enough, but if you have inconsistent FPS and/or a lot of objects in your area\n" + 
-                "then you *may* notice split-second pop-in. 0 is *every* frame however, which may result in worse FPS.",
+                "Note that setting this to zero will result in NO updates, 1 is every frame, 2 is every second frame, etc.\n" + 
+                "Values higher than 1 *may* have split-second pop-in. 1 is *every* frame however, which may result in worse FPS.",
                 FRAMES_BEFORE_UPDATE);
         
         FRAMES_BEFORE_PURGE = loadInt("FRAMES_BEFORE_PURGE",
@@ -46,6 +47,15 @@ public class ModConfig {
                 "Must be higher than 0 and lower than 1.0 (but 1.0 would cause MAJOR performance issues).",
                 WORKER_LOAD_FACTOR);
         
+        OBJECTS_INITIALLY_HIDDEN = loadBool("OBJECTS_INITIALLY_HIDDEN",
+                "Newly-tracked objects hidden?\n" +
+                "Default: " + OBJECTS_INITIALLY_HIDDEN + "\n" +
+                "If true, then objects which are freshly added (including after a purge) will be hidden. \n" +
+                "This will be better performance, HOWEVER if the object is already within-view then there may be \n" +
+                "visible pop-in, depending on how high the FRAMES_BEFORE_UPDATE setting is, and your overall FPS (in low-FPS\n" +
+                "situations, pop-in is more likely to be noticed).",
+                OBJECTS_INITIALLY_HIDDEN);
+        
         if(CONFIG.hasChanged())
             CONFIG.save();
     }
@@ -60,5 +70,11 @@ public class ModConfig {
         Property prop = CONFIG.get(Configuration.CATEGORY_GENERAL, name, def);
         prop.comment = desc;
         return prop.getDouble(def);
+    }
+    
+    public static boolean loadBool(String name, String desc, boolean def) {
+        Property prop = CONFIG.get(Configuration.CATEGORY_GENERAL, name, def);
+        prop.comment = desc;
+        return prop.getBoolean(def);
     }
 }

@@ -24,11 +24,12 @@ public class TileEntityTracker {
         // Has the side-effect of always rendering a TESR if it's at 0,0,0 obviously, but meh.
         if ((te.xCoord == 0) && (te.yCoord == 0) && (te.zCoord == 0)) return true;
         
+        
+        
         String teKey = te.getBlockType().getUnlocalizedName() + "///" +  te.xCoord  + "///" + te.yCoord  + "///" + te.zCoord;
         
-        // add new tracked items with shouldRender=false as default (RenderWorldLastWorker takes over from here)
         if (!TRACKED_ITEMS.containsKey(teKey)) {
-            TRACKED_ITEMS.put(teKey, new TileEntityRecord(te.getRenderBoundingBox(), false));
+            TRACKED_ITEMS.put(teKey, new TileEntityRecord(te.getRenderBoundingBox(), (!ModConfig.OBJECTS_INITIALLY_HIDDEN)));
         }
         
         return TRACKED_ITEMS.get(teKey).getShouldRender();
