@@ -58,8 +58,7 @@ public class RenderWorker {
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         for (Map.Entry<String, TileEntityRecord> tileEntityTrack : TileEntityTracker.TRACKED_ITEMS.entrySet()) {
-            tileEntityTrack.getValue().addAge();
-            if (tileEntityTrack.getValue().getAge() == MAX_AGE_BEFORE_PURGE) {
+            if ((tileEntityTrack.getValue().getAge() == MAX_AGE_BEFORE_PURGE) && (!tileEntityTrack.getValue().getShouldRender())) {
                 // entry expired, purge it
                 TileEntityTracker.TRACKED_ITEMS.remove(tileEntityTrack.getKey());
             }
@@ -67,6 +66,7 @@ public class RenderWorker {
                 tileEntityTrack.getValue().resetLastUpdate();
                 RENDER_WORKER_QUEUE.offer(new TileEntityRecordTask(event.partialTicks, tileEntityTrack.getValue()));
             }
+            tileEntityTrack.getValue().addAge();
         }
     }
     
