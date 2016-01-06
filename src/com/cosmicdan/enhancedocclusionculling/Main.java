@@ -36,14 +36,14 @@ public class Main {
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        TileEntityTracker.init();
-        MinecraftForge.EVENT_BUS.register(RENDER_WORKER);
-        MinecraftForge.EVENT_BUS.register(new DebugInfo());
+        ModConfig.init(event.getSuggestedConfigurationFile());
     }
     
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        
+        MinecraftForge.EVENT_BUS.register(RENDER_WORKER);
+        MinecraftForge.EVENT_BUS.register(new DebugInfo());
+        TileEntityTracker.init();
     }
     
 }

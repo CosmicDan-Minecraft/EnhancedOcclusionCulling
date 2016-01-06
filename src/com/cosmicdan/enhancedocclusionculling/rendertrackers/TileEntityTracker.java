@@ -2,6 +2,8 @@ package com.cosmicdan.enhancedocclusionculling.rendertrackers;
 
 import java.util.HashMap;
 
+import com.cosmicdan.enhancedocclusionculling.ModConfig;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +16,7 @@ public class TileEntityTracker {
     public static HashMap<String, TileEntityRecord> TRACKED_ITEMS;
     
     public static void init() {
-        TRACKED_ITEMS = new HashMap<String, TileEntityRecord>(100, 0.50F);
+        TRACKED_ITEMS = new HashMap<String, TileEntityRecord>(ModConfig.WORKER_INITIAL_SIZE, (float) ModConfig.WORKER_LOAD_FACTOR);
     }
 
     public static boolean shouldRender(TileEntity te) {
@@ -30,24 +32,5 @@ public class TileEntityTracker {
         }
         
         return TRACKED_ITEMS.get(teKey).getShouldRender();
-        
-        /*
-        EntityLivingBase camera = Minecraft.getMinecraft().renderViewEntity;
-        
-        float partialTicks = 1.0F; // we won't worry about a higher resolution for now. In future, I may try to use actual partialTicks from e.g. RenderWorldLastEvent event
-        Vec3 cameraVector = camera.getPosition(partialTicks);
-        Frustrum frustrum = new Frustrum();
-        double viewX = camera.lastTickPosX + (camera.posX - camera.lastTickPosX) * partialTicks;
-        double viewY = camera.lastTickPosY + (camera.posY - camera.lastTickPosY) * partialTicks;
-        double viewZ = camera.lastTickPosZ + (camera.posZ - camera.lastTickPosZ) * partialTicks;
-        frustrum.setPosition(viewX, viewY, viewZ);
-        
-        if (frustrum.isBoundingBoxInFrustum(te.getRenderBoundingBox()))
-            return true;
-        else
-            return false;
-        */
     }
-    
-    
 }

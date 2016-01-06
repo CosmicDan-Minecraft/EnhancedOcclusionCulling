@@ -18,8 +18,8 @@ public class RenderWorker {
     
     private static BlockingQueue<TileEntityRecordTask> RENDER_WORKER_QUEUE = new LinkedBlockingQueue<TileEntityRecordTask>();
     private static Thread RENDER_WORKER_THREAD;
-    private static int MAX_AGE_BEFORE_UPDATE = 2;
-    private static int MAX_AGE_BEFORE_PURGE = 1000;
+    private static int MAX_AGE_BEFORE_UPDATE = ModConfig.FRAMES_BEFORE_UPDATE;
+    private static int MAX_AGE_BEFORE_PURGE = ModConfig.FRAMES_BEFORE_PURGE;
     
     // used in worker thread
     protected TileEntityRecordTask recordTask;
