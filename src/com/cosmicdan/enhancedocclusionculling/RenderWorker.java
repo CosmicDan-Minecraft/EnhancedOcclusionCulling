@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.cosmicdan.enhancedocclusionculling.rendertrackers.TileEntityRecord;
-import com.cosmicdan.enhancedocclusionculling.rendertrackers.TileEntityTracker;
+import com.cosmicdan.enhancedocclusionculling.trackers.ItemRecord;
+import com.cosmicdan.enhancedocclusionculling.trackers.ItemTracker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustrum;
@@ -16,16 +16,18 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class RenderWorker {
     
-    private static final BlockingQueue<TileEntityRecord> RENDER_WORKER_QUEUE = new LinkedBlockingQueue<TileEntityRecord>();
+    private static final BlockingQueue<ItemRecord> RENDER_WORKER_QUEUE = new LinkedBlockingQueue<ItemRecord>();
     private static Thread RENDER_WORKER_THREAD;
     private static final int MAX_AGE_BEFORE_UPDATE = ModConfig.FRAMES_BEFORE_UPDATE;
-    private static final int MAX_AGE_BEFORE_PURGE = ModConfig.FRAMES_BEFORE_PURGE;
+    private static final int MAX_AGE_BEFORE_PURGE_TE = ModConfig.FRAMES_BEFORE_PURGE_TE;
+    private static final int MAX_AGE_BEFORE_PURGE_FX = ModConfig.FRAMES_BEFORE_PURGE_FX;
     private static final int CAMERA_UPDATE_RATE = ModConfig.FRAMES_BEFORE_CAMERA_UPDATE;
     
     private static int CAMERA_UPDATE_COUNTER = 0;
+    private static int MAX_AGE_BEFORE_PURGE_THIS_TYPE;
     
     // used in worker thread
-    protected TileEntityRecord record;
+    protected ItemRecord record;
     protected EntityLivingBase camera;
     protected Vec3 cameraVector;
     protected Frustrum frustrum = new Frustrum();
@@ -62,16 +64,24 @@ public class RenderWorker {
         }
         CAMERA_UPDATE_COUNTER++;
         
-        for (Map.Entry<String, TileEntityRecord> tileEntityTrack : TileEntityTracker.TRACKED_ITEMS.entrySet()) {
-            if ((tileEntityTrack.getValue().getAge() == MAX_AGE_BEFORE_PURGE) && (!tileEntityTrack.getValue().getShouldRender())) {
+        for (Map.Entry<String, ItemRecord> itemRecordEntry : ItemTracker.TRACKED_ITEMS.entrySet()) {
+            switch (itemRecordEntry.getValue().getType()) {
+                case TILEENTITY:
+                    MAX_AGE_BEFORE_PURGE_THIS_TYPE = MAX_AGE_BEFORE_PURGE_TE;
+                    break;
+                case PARTICLE:
+                    MAX_AGE_BEFORE_PURGE_THIS_TYPE = MAX_AGE_BEFORE_PURGE_FX;
+                    break;
+            }
+            if ((itemRecordEntry.getValue().getAge() == MAX_AGE_BEFORE_PURGE_THIS_TYPE) && (!itemRecordEntry.getValue().getShouldRender())) {
                 // entry expired, purge it
-                TileEntityTracker.TRACKED_ITEMS.remove(tileEntityTrack.getKey());
+                ItemTracker.TRACKED_ITEMS.remove(itemRecordEntry.getKey());
             }
-            else if (tileEntityTrack.getValue().getLastUpdate() == MAX_AGE_BEFORE_UPDATE) {
-                tileEntityTrack.getValue().resetLastUpdate();
-                RENDER_WORKER_QUEUE.offer(tileEntityTrack.getValue());
+            else if (itemRecordEntry.getValue().getLastUpdate() == MAX_AGE_BEFORE_UPDATE) {
+                itemRecordEntry.getValue().resetLastUpdate();
+                RENDER_WORKER_QUEUE.offer(itemRecordEntry.getValue());
             }
-            tileEntityTrack.getValue().addAge();
+            itemRecordEntry.getValue().addAge();
         }
     }
 }

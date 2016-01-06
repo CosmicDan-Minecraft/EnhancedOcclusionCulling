@@ -7,10 +7,12 @@ import net.minecraftforge.common.config.Property;
 
 public class ModConfig {
 
+    public static boolean DO_FX = true;
     public static int FRAMES_BEFORE_CAMERA_UPDATE = 2;
     public static int FRAMES_BEFORE_UPDATE = 2;
-    public static int FRAMES_BEFORE_PURGE = 1000;
-    public static int WORKER_INITIAL_SIZE = 100;
+    public static int FRAMES_BEFORE_PURGE_TE = 200;
+    public static int FRAMES_BEFORE_PURGE_FX = 20;
+    public static int WORKER_INITIAL_SIZE = 400;
     public static double WORKER_LOAD_FACTOR = 0.5;
     public static boolean OBJECTS_INITIALLY_HIDDEN = true;
     
@@ -20,10 +22,17 @@ public class ModConfig {
         CONFIG = new Configuration(configFile);
         CONFIG.load();
         
+        DO_FX = loadBool("DO_FX",
+                "Perform culling with Particles/FX objects\n" +
+                "Default: " + DO_FX + "\n" +
+                "In the case of particles, this will prevent them spawning at all (if they're occluded from view) rather than\n" +
+                "making them just invisible, so it's optional (but a nice alternative to lowering particle count in video settings).",
+                DO_FX);
+        
         FRAMES_BEFORE_CAMERA_UPDATE = loadInt("FRAMES_BEFORE_CAMERA_UPDATE",
                 "How many frames before the player camera (viewport) is updated.\n" +
                 "Default: " + FRAMES_BEFORE_CAMERA_UPDATE + "\n" +
-                "This determines the rate that the player 'camera' position is updated, used in calculation for raytracing." +
+                "This determines the rate that the player 'camera' position is updated, used in calculation for raytracing.\n" +
                 "Must be 1 or greater.",
                 FRAMES_BEFORE_CAMERA_UPDATE);
         
@@ -35,12 +44,18 @@ public class ModConfig {
                 "If you want to tune your performance, increasing this value will help.",
                 FRAMES_BEFORE_UPDATE);
         
-        FRAMES_BEFORE_PURGE = loadInt("FRAMES_BEFORE_PURGE",
-                "How many frames before hidden objects are considered 'stale' and purged from the tracker.\n" +
-                "Default: " + FRAMES_BEFORE_PURGE + "\n" + 
+        FRAMES_BEFORE_PURGE_TE = loadInt("FRAMES_BEFORE_PURGE_TE",
+                "How many frames before hidden Tile Entity objects are considered 'stale' and purged from the tracker.\n" +
+                "Default: " + FRAMES_BEFORE_PURGE_TE + "\n" + 
                 "Whenever an object is hidden or unhidden, the 'age' is reset - but if an object is hidden for this number of \n" + 
                 "frames, it will be purged from the queue. Lower numbers will reduce memory use at the cost of higher CPU work.",
-                FRAMES_BEFORE_PURGE);
+                FRAMES_BEFORE_PURGE_TE);
+        
+        FRAMES_BEFORE_PURGE_FX = loadInt("FRAMES_BEFORE_PURGE_FX",
+                "How many frames before hidden Particle/FX objects are considered 'stale' and purged from the tracker.\n" +
+                "Default: " + FRAMES_BEFORE_PURGE_FX + "\n" + 
+                "As above. Keep this number LOW, as there are a *lot* of particles/FX objects in the world - even in vanilla.",
+                FRAMES_BEFORE_PURGE_FX);
         
         WORKER_INITIAL_SIZE = loadInt("WORKER_INITIAL_SIZE",
                 "Initial size of the worker queue\n" +

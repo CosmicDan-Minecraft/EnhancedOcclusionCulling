@@ -1,16 +1,23 @@
-package com.cosmicdan.enhancedocclusionculling.rendertrackers;
+package com.cosmicdan.enhancedocclusionculling.trackers;
 
 import net.minecraft.util.AxisAlignedBB;
 
-public class TileEntityRecord {
+public class ItemRecord {
     private final AxisAlignedBB boundingBox;
     private boolean shouldRender;
     private int lastUpdate;
     private int age;
+    private TYPE itemType;
     
-    public TileEntityRecord(AxisAlignedBB boundingBox, boolean shouldRender) {
+    public static enum TYPE {
+        TILEENTITY,
+        PARTICLE
+    }
+    
+    public ItemRecord(AxisAlignedBB boundingBox, TYPE itemType, boolean shouldRender) {
         this.boundingBox = boundingBox;
         this.shouldRender = shouldRender;
+        this.itemType = itemType;
         this.lastUpdate = 0;
     }
     
@@ -33,6 +40,10 @@ public class TileEntityRecord {
     
     public AxisAlignedBB getBoundingBox() {
         return boundingBox;
+    }
+    
+    public TYPE getType() {
+        return itemType;
     }
     
     public void setShouldRender(boolean shouldRender) {

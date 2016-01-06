@@ -7,7 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.cosmicdan.enhancedocclusionculling.rendertrackers.TileEntityTracker;
+import com.cosmicdan.enhancedocclusionculling.trackers.ItemTracker;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -42,7 +42,7 @@ public class Main {
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new RenderWorker());
         MinecraftForge.EVENT_BUS.register(new DebugInfo());
-        TileEntityTracker.init();
+        ItemTracker.init();
     }
     
 }

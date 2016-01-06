@@ -14,56 +14,41 @@ import com.cosmicdan.enhancedocclusionculling.Main;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityRendererDispatcherTransformer implements IClassTransformer {
-    
-    String targetClassDev = "net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher";
-    String targetClassObf = "bmk";
-    String targetMethodDev = "renderTileEntityAt";
-    String targetMethodObf = "func_147549_a";
-    String targetDesc = "(Lnet/minecraft/tileentity/TileEntity;DDDF)V";
-    String callbackDesc = "(Lnet/minecraft/tileentity/TileEntity;)Z";
-    
+public class TileEntityRendererDispatcherTransformer extends TransformerHookMethodStart {
+
     @Override
-    public byte[] transform(String name, String transformedName, byte[] classBytes) {
-        if (name.equals(targetClassDev)) // dev environment
-            return patchClass(classBytes, true);
-        if (name.equals(targetClassObf)) // obf environment
-            return patchClass(classBytes, false);
-        return classBytes;
+    public String setTargetClassDev() {
+        return "net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher";
     }
-    
-    private byte[] patchClass(byte[] classBytes, boolean dev) {
-        String targetMethod = dev ? targetMethodDev : targetMethodObf;
 
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(classBytes);
-        classReader.accept(classNode, 0);
+    @Override
+    public String setTargetClassObf() {
+        return "bmk";
+    }
 
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while(methods.hasNext()) {
-            MethodNode m = methods.next();
-            int fdiv_index = -1;
-            if ((m.name.equals(targetMethod) && m.desc.equals(targetDesc))) {
-                AbstractInsnNode currentNode = null;
-                AbstractInsnNode targetNode = null;
-                AbstractInsnNode ain = m.instructions.getFirst();
-                InsnList toInject = new InsnList();
-                
-                LabelNode labelTrue = new LabelNode();
-                
-                toInject.add(new VarInsnNode(Opcodes.ALOAD, 1)); // push first parameter (TileEntity p_147549_1_) onto stack
-                toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/cosmicdan/enhancedocclusionculling/rendertrackers/TileEntityTracker", "shouldRender", callbackDesc, false));
-                toInject.add(new JumpInsnNode(Opcodes.IFNE, labelTrue)); // if result is true, go to labelTrue
-                toInject.add(new InsnNode(Opcodes.RETURN)); // not true, so return (i.e. don't render)
-                toInject.add(labelTrue); // is true, so continue with the rest of method
-                
-                m.instructions.insertBefore(ain, toInject);
-                Main.LOGGER.info("[i] Patched net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher#renderTileEntityAt");
-                break;
-            }
-        }
-    ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-    classNode.accept(writer);
-    return writer.toByteArray();
+    @Override
+    public String setTargetMethodDev() {
+        return "renderTileEntityAt";
+    }
+
+    @Override
+    public String setTargetMethodObf() {
+        return "func_147549_a";
+    }
+
+    @Override
+    public String setTargetDesc() {
+        return "(Lnet/minecraft/tileentity/TileEntity;DDDF)V";
+    }
+
+    @Override
+    public InsnList injectOps(InsnList toInject) {
+        LabelNode labelTrue = new LabelNode();
+        toInject.add(new VarInsnNode(Opcodes.ALOAD, 1)); // push first parameter (TileEntity p_147549_1_) onto stack
+        toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/cosmicdan/enhancedocclusionculling/trackers/ItemTracker", "shouldRenderTe", "(Lnet/minecraft/tileentity/TileEntity;)Z", false));
+        toInject.add(new JumpInsnNode(Opcodes.IFNE, labelTrue)); // if result is true, go to labelTrue
+        toInject.add(new InsnNode(Opcodes.RETURN)); // not true, so return (i.e. don't render)
+        toInject.add(labelTrue); // is true, so continue with the rest of method
+        return(toInject);
     }
 }

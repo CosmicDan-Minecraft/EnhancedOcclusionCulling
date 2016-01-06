@@ -2,7 +2,7 @@ package com.cosmicdan.enhancedocclusionculling.core;
 
 import java.util.Map;
 
-import com.cosmicdan.enhancedocclusionculling.core.transformers.TileEntityRendererDispatcherTransformer;
+import com.cosmicdan.enhancedocclusionculling.core.transformers.*;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -15,7 +15,8 @@ public class CorePlugin implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass() {
         return new String[]{
-                TileEntityRendererDispatcherTransformer.class.getName()
+                TileEntityRendererDispatcherTransformer.class.getName(),
+                WorldTransformer.class.getName()
         };
     }
 
