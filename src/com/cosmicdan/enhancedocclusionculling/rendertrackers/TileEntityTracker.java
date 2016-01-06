@@ -14,7 +14,7 @@ public class TileEntityTracker {
     public static HashMap<String, TileEntityRecord> TRACKED_ITEMS;
     
     public static void init() {
-        TRACKED_ITEMS = new HashMap<String, TileEntityRecord>();
+        TRACKED_ITEMS = new HashMap<String, TileEntityRecord>(100, 0.50F);
     }
 
     public static boolean shouldRender(TileEntity te) {
