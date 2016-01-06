@@ -24,8 +24,6 @@ public class TileEntityTracker {
         // Has the side-effect of always rendering a TESR if it's at 0,0,0 obviously, but meh.
         if ((te.xCoord == 0) && (te.yCoord == 0) && (te.zCoord == 0)) return true;
         
-        
-        
         String teKey = te.getBlockType().getUnlocalizedName() + "///" +  te.xCoord  + "///" + te.yCoord  + "///" + te.zCoord;
         
         if (!TRACKED_ITEMS.containsKey(teKey)) {

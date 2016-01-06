@@ -32,7 +32,6 @@ public class Main {
     
     @Instance(MODNAME)
     public static Main INSTANCE;
-    public static RenderWorker RENDER_WORKER = new RenderWorker();
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -41,7 +40,7 @@ public class Main {
     
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(RENDER_WORKER);
+        MinecraftForge.EVENT_BUS.register(new RenderWorker());
         MinecraftForge.EVENT_BUS.register(new DebugInfo());
         TileEntityTracker.init();
     }

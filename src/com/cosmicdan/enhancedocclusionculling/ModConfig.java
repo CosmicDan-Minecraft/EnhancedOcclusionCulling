@@ -7,8 +7,9 @@ import net.minecraftforge.common.config.Property;
 
 public class ModConfig {
 
+    public static int FRAMES_BEFORE_CAMERA_UPDATE = 2;
     public static int FRAMES_BEFORE_UPDATE = 2;
-    public static int FRAMES_BEFORE_PURGE = 100;
+    public static int FRAMES_BEFORE_PURGE = 1000;
     public static int WORKER_INITIAL_SIZE = 100;
     public static double WORKER_LOAD_FACTOR = 0.5;
     public static boolean OBJECTS_INITIALLY_HIDDEN = true;
@@ -19,18 +20,26 @@ public class ModConfig {
         CONFIG = new Configuration(configFile);
         CONFIG.load();
         
+        FRAMES_BEFORE_CAMERA_UPDATE = loadInt("FRAMES_BEFORE_CAMERA_UPDATE",
+                "How many frames before the player camera (viewport) is updated.\n" +
+                "Default: " + FRAMES_BEFORE_CAMERA_UPDATE + "\n" +
+                "This determines the rate that the player 'camera' position is updated, used in calculation for raytracing." +
+                "Must be 1 or greater.",
+                FRAMES_BEFORE_CAMERA_UPDATE);
+        
         FRAMES_BEFORE_UPDATE = loadInt("FRAMES_BEFORE_UPDATE",
                 "How many frames before each tracked object is checked for viewport occlusion, where 0 is every frame.\n" +
                 "Default: " + FRAMES_BEFORE_UPDATE + "\n" +
                 "Note that setting this to zero will result in NO updates, 1 is every frame, 2 is every second frame, etc.\n" + 
-                "Values higher than 1 *may* have split-second pop-in. 1 is *every* frame however, which may result in worse FPS.",
+                "Values higher than 1 (every frame) *may* cause a split-second pop-in in low FPS situations. Must be 1 or greater.\n" +
+                "If you want to tune your performance, increasing this value will help.",
                 FRAMES_BEFORE_UPDATE);
         
         FRAMES_BEFORE_PURGE = loadInt("FRAMES_BEFORE_PURGE",
                 "How many frames before hidden objects are considered 'stale' and purged from the tracker.\n" +
-                "Default: + " + FRAMES_BEFORE_PURGE + "\n" + 
+                "Default: " + FRAMES_BEFORE_PURGE + "\n" + 
                 "Whenever an object is hidden or unhidden, the 'age' is reset - but if an object is hidden for this number of \n" + 
-                "frames, it will be purged from the queue. Lower numbers will reduce memory at the cost of higher CPU work.",
+                "frames, it will be purged from the queue. Lower numbers will reduce memory use at the cost of higher CPU work.",
                 FRAMES_BEFORE_PURGE);
         
         WORKER_INITIAL_SIZE = loadInt("WORKER_INITIAL_SIZE",
